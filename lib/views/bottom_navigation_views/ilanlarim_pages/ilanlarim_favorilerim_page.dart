@@ -19,11 +19,13 @@ class _IlanlarimFavorilerimPageState
       //Listview Builder içerisinde Favori Ürünler Döndürülecek.
       body: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: DataHelper.testItems.length,
+        itemCount: DataHelper.getActiveItems().length,
         itemBuilder: (context, index) {
           //Returnde Favori Ürün Kar Tasarımı gelecek.
           //TestItems listesinden bir LetGoItem alacak.
-          return FavoriUrunKart(favoriUrun: DataHelper.testItems[index]);
+          return FavoriUrunKart(
+            favoriUrun: DataHelper.getActiveItems()[index],
+          );
         },
       ),
     );
@@ -31,7 +33,7 @@ class _IlanlarimFavorilerimPageState
 }
 
 class FavoriUrunKart extends StatelessWidget {
-  LetGoItem favoriUrun;
+  final LetGoItem favoriUrun;
   FavoriUrunKart({super.key, required this.favoriUrun});
 
   @override

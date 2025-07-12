@@ -112,7 +112,7 @@ class DataHelper {
       imagePaths: ["assets/images/placeholder2.jpg"],
       sellerId: "user2",
       status: ItemStatus.active,
-      publishDate: DateTime.now().subtract(Duration(hours: 5)),
+      publishDate: DateTime.now().subtract(Duration(days: 10, hours: 5)),
       viewCount: 89,
       condition: ItemCondition.good,
       category: MainCategory.electronics,
@@ -441,7 +441,7 @@ class DataHelper {
     ),
   ];
 
-  // Temel filtreleme fonksiyonları (aynı kaldı)
+  // Temel filtreleme fonksiyonları
   static List<LetGoItem> getAllItems() {
     return allItems;
   }
@@ -470,10 +470,10 @@ class DataHelper {
         .toList();
   }
 
-  // ✅ Kategori bazlı filtreleme (güncellenmiş)
+  // Kategori bazlı filtreleme
   static List<LetGoItem> getItemsByCategory(MainCategory category) {
     if (category == MainCategory.allCategories) {
-      return getActiveItems(); // Tüm kategoriler = Tüm aktif ilanlar
+      return getActiveItems();
     }
     return allItems
         .where(
@@ -484,7 +484,7 @@ class DataHelper {
         .toList();
   }
 
-  // ✅ Kategori bazlı ilan sayısı
+  // Kategori bazlı ilan sayısı
   static int getItemCountByCategory(MainCategory category) {
     if (category == MainCategory.allCategories) {
       return getActiveItems().length;
@@ -521,7 +521,7 @@ class DataHelper {
         .toList();
   }
 
-  // Utility fonksiyonları (aynı kaldı)
+  // Utility fonksiyonları
   static User? getUserById(String userId) {
     try {
       return users.firstWhere((user) => user.id == userId);
@@ -537,7 +537,4 @@ class DataHelper {
       return null;
     }
   }
-
-  // Geriye uyumluluk için
-  static List<LetGoItem> testItems = getActiveItems();
 }

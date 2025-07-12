@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:letgo_clone/models/main_category.dart';
 
 class LetGoItem {
-  //Zorunlular
   final String id;
   final String title;
   final String description;
@@ -12,9 +11,8 @@ class LetGoItem {
   final ItemStatus status;
   final DateTime publishDate;
   final int viewCount;
+  final int likeCount;
   final bool isLiked;
-  
-  // Özellikler
   final bool isFeatured;
   final bool isWalletSafe;
   final bool hasFreeShipping;
@@ -35,6 +33,7 @@ class LetGoItem {
     required this.category,
     required this.brand,
     this.viewCount = 0,
+    this.likeCount = 0,
     this.isLiked = false,
     this.isFeatured = false,
     this.isWalletSafe = false,
@@ -51,7 +50,7 @@ class LetGoItem {
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(publishDate);
-    
+
     if (difference.inDays > 0) {
       return "${difference.inDays} gün önce";
     } else if (difference.inHours > 0) {
@@ -107,6 +106,7 @@ class LetGoItem {
   String get categoryText {
     return category.name;
   }
+
   //Ürün Kart Tasarımında Güncelleyeceğim
   List<String> get featureBadges {
     List<String> badges = [];
@@ -120,16 +120,7 @@ class LetGoItem {
     return "#${id.padLeft(8, '0')}";
   }
 }
-enum ItemStatus {
-  active,
-  pending,
-  rejected,
-  sold
-}
-enum ItemCondition {
-  new_,
-  likeNew,
-  good,
-  fair,
-  worn
-}
+
+enum ItemStatus { active, pending, rejected, sold }
+
+enum ItemCondition { new_, likeNew, good, fair, worn }
