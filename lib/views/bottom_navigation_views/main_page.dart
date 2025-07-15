@@ -3,6 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
 import 'package:letgo_clone/models/main_category.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
+import 'package:letgo_clone/views/cart_page.dart';
+import 'package:letgo_clone/views/category_page.dart';
+import 'package:letgo_clone/views/item_detail_page.dart';
+import 'package:letgo_clone/widgets/urun_kart_widget.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -13,7 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   //Kategori Listesi - S
-  List<MainCategory> categoryList = DataHelper.categoryList;
+  List<MainCategory> categoryList = DataHelper.allCategoryList;
   //Pageview Banner Listesi - S
   List<String> bannerPath = DataHelper.bannerPath;
   //Pageview Banner Listesi - F
@@ -21,6 +25,10 @@ class _MainPageState extends State<MainPage> {
   int _currentPage = 0;
   //Ürünler deneme listesi
   List<LetGoItem> testItems = DataHelper.getActiveItems();
+  void onCartUpdated() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,13 +86,52 @@ class _MainPageState extends State<MainPage> {
         //Title Container - F
         //Actions - S
         actions: [
-          CircleAvatar(
-            backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-            child: Icon(
-              Icons.shopping_cart,
-              size: 22.sp,
-              color: Colors.white,
-            ),
+          Stack(
+            children: [
+              CircleAvatar(
+                backgroundColor: Color.fromRGBO(44, 44, 44, 1),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    size: 22.sp,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    //Sepetten dönüşü beklemek için
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => CartPage()),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ),
+              //Sepetteki ürün sayısı
+              if (DataHelper.getCartItemCount() > 0)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Text(
+                      '${DataHelper.getCartItemCount()}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
           SizedBox(width: 12.w),
           CircleAvatar(
@@ -165,36 +212,48 @@ class _MainPageState extends State<MainPage> {
                             horizontal: 8.w,
                             vertical: 8.h,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircleAvatar(
-                                radius: 20.r,
-                                backgroundColor:
-                                    categoryList[index].backgroundColor,
-                                child: Icon(
-                                  categoryList[index].icon,
-                                  color: Colors.white,
-                                  size: 24.sp,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              SizedBox(
-                                width: 70,
-                                child: Text(
-                                  "${categoryList[index].name}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10.sp,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => CategoryPage(
+                                    category: categoryList[index],
                                   ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                            ],
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircleAvatar(
+                                  radius: 20.r,
+                                  backgroundColor:
+                                      categoryList[index].backgroundColor,
+                                  child: Icon(
+                                    categoryList[index].icon,
+                                    color: Colors.white,
+                                    size: 24.sp,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                SizedBox(
+                                  width: 70,
+                                  child: Text(
+                                    "${categoryList[index].name}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10.sp,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -309,11 +368,16 @@ class _MainPageState extends State<MainPage> {
                         SizedBox(
                           height: 375.h,
                           child: ListView.builder(
+                            itemExtent: 200,
                             itemCount: testItems.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return UrunKartTasarim(
-                                testItem: testItems[index],
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: UrunKartTasarim(
+                                  testItem: testItems[index],
+                                  onCartUpdated: onCartUpdated,
+                                ),
                               );
                             },
                           ),
@@ -343,169 +407,28 @@ class _MainPageState extends State<MainPage> {
 
                   //Ücretsiz Kargo Banner - F
                   // GridView - S
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 0.6,
-                          crossAxisSpacing: 10.w,
-                          mainAxisSpacing: 15.h,
-                        ),
-                    itemCount: testItems.length,
-                    itemBuilder: (context, index) {
-                      return UrunKartTasarim(testItem: testItems[index]);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.6,
+                            crossAxisSpacing: 10.w,
+                            mainAxisSpacing: 15.h,
+                          ),
+                      itemCount: testItems.length,
+                      itemBuilder: (context, index) {
+                        return UrunKartTasarim(
+                          testItem: testItems[index],
+                          onCartUpdated: onCartUpdated,
+                        );
+                      },
+                    ),
                   ),
                   //GridView - F
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class UrunKartTasarim extends StatelessWidget {
-  const UrunKartTasarim({super.key, required this.testItem});
-
-  final LetGoItem testItem;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 6.w),
-      width: 200.w,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          //Üst Container
-          Container(
-            padding: EdgeInsets.symmetric(
-              vertical: 10.h,
-              horizontal: 10.w,
-            ),
-            height: 250.h,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
-              ),
-              image: DecorationImage(
-                image: AssetImage(testItem.mainImage),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: Column(
-              children: [
-                //Öne çıkan + kalp ikonu - s
-                Row(
-                  children: [
-                    Container(
-                      child: Row(
-                        children: [Icon(Icons.light), Text("Öne Çıkan")],
-                      ),
-                    ),
-                    Spacer(),
-                    CircleAvatar(
-                      backgroundColor: Colors.black.withValues(
-                        alpha: 0.75,
-                      ),
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                //Öne çıkan + kalp ikonu -f
-                Spacer(),
-                //Cüzdanım güvende - s
-                Container(
-                  child: Row(
-                    children: [
-                      Icon(Icons.shield, size: 14),
-                      Text(
-                        "Cüzdanım Güvende",
-                        style: TextStyle(fontSize: 10.sp),
-                      ),
-                    ],
-                  ),
-                ),
-                //Cüzdanım güvende - f
-              ],
-            ),
-          ),
-          //Alt container
-          Container(
-            height: 100.h,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(12),
-                bottomRight: Radius.circular(12),
-              ),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: 6.h,
-                bottom: 10.h,
-                left: 6.w,
-                right: 6.w,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${testItem.price.toString()} TL",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                  Text(
-                    testItem.description,
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14.sp,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                  ),
-                  Spacer(),
-                  SizedBox(
-                    height: 30.h,
-                    width: double.infinity.w,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(255, 63, 86, 1),
-                      ),
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.shopping_basket,
-                            size: 18.sp,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "Sepete Ekle",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

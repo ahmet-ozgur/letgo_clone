@@ -145,10 +145,23 @@ class RedIlanKart extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            redUrunler[index].statusText,
-                            style: TextStyle(color: Colors.white),
+                          //Duruma Göre Değişken Kutucuk - S
+                          Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: redUrunler[index].statusColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              redUrunler[index].statusText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10.5,
+                              ),
+                            ),
                           ),
+                          //Duruma Göre Değişken Kutucuk - F
                         ],
                       ),
                       //price + durum kutucuğu - F
@@ -351,10 +364,26 @@ class SatildiIlanKart extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            satilanUrunler[index].statusText,
-                            style: TextStyle(color: Colors.white),
+                          //Duruma Göre Değişken Kutucuk - S
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: satilanUrunler[index].statusColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              satilanUrunler[index].statusText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10.5,
+                              ),
+                            ),
                           ),
+                          //Duruma Göre Değişken Kutucuk - F
                         ],
                       ),
                       //price + durum kutucuğu - F
@@ -521,10 +550,26 @@ class EtkinIlanKart extends StatelessWidget {
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            aktifUrunler[index].statusText,
-                            style: TextStyle(color: Colors.white),
+                          //Duruma Göre Değişken Kutucuk - S
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 1,
+                            ),
+                            decoration: BoxDecoration(
+                              color: aktifUrunler[index].statusColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              aktifUrunler[index].statusText,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10.5,
+                              ),
+                            ),
                           ),
+                          //Duruma Göre Değişken Kutucuk - F
                         ],
                       ),
                       //price + durum kutucuğu - F

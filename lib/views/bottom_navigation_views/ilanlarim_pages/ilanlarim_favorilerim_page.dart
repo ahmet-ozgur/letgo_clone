@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
+import 'package:letgo_clone/views/main_bottom_navigation.dart';
 
 class IlanlarimFavorilerimPage extends StatefulWidget {
   const IlanlarimFavorilerimPage({super.key});
@@ -14,27 +15,41 @@ class _IlanlarimFavorilerimPageState
     extends State<IlanlarimFavorilerimPage> {
   @override
   Widget build(BuildContext context) {
+    //Favori ürünleri al - S
+    List<LetGoItem> favoriteItems = DataHelper.getFavoriteItems();
+    //Favori ürünleri al - F
+
     return Scaffold(
-      backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-      //Listview Builder içerisinde Favori Ürünler Döndürülecek.
-      body: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: DataHelper.getActiveItems().length,
-        itemBuilder: (context, index) {
-          //Returnde Favori Ürün Kar Tasarımı gelecek.
-          //TestItems listesinden bir LetGoItem alacak.
-          return FavoriUrunKart(
-            favoriUrun: DataHelper.getActiveItems()[index],
-          );
-        },
-      ),
+      backgroundColor: Color.fromRGBO(34, 34, 34, 1),
+      body: favoriteItems.length == 0
+          ? FavoriYok()
+          : ListView.builder(
+              scrollDirection: Axis.vertical,
+              itemCount: favoriteItems.length,
+              itemBuilder: (context, index) {
+                //Returnde Favori Ürün Kar Tasarımı gelecek.
+                //FavoriteItems listesinden bir LetGoItem alacak.
+                return FavoriUrunKart(
+                  favoriUrun: favoriteItems[index],
+                  onFavoriteChanged: () {
+                    setState(() {});
+                  },
+                );
+              },
+            ),
     );
   }
 }
 
 class FavoriUrunKart extends StatelessWidget {
   final LetGoItem favoriUrun;
-  FavoriUrunKart({super.key, required this.favoriUrun});
+  final VoidCallback? onFavoriteChanged;
+
+  const FavoriUrunKart({
+    super.key,
+    required this.favoriUrun,
+    this.onFavoriteChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +64,7 @@ class FavoriUrunKart extends StatelessWidget {
           width: 1.75,
         ),
       ),
-      //Container tasarımı -
+      //Container tasarımı - F
 
       //Child Tasarım - S
       child: Row(
@@ -96,17 +111,91 @@ class FavoriUrunKart extends StatelessWidget {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-                child: Icon(Icons.favorite, size: 22, color: Colors.red),
+              //Favori İkonu GestureDetector ile - S
+              GestureDetector(
+                onTap: () {
+                  DataHelper.removeFromFavorites(favoriUrun.id);
+                  if (onFavoriteChanged != null) {
+                    onFavoriteChanged!();
+                  }
+                },
+                child: CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Color.fromRGBO(44, 44, 44, 1),
+                  child: Icon(Icons.favorite, size: 22, color: Colors.red),
+                ),
               ),
+              //Favori İkonu GestureDetector ile - F
             ],
           ),
           //Icon Column - F
         ],
       ),
       //Child Tasarım - F
+    );
+  }
+}
+
+class FavoriYok extends StatelessWidget {
+  const FavoriYok({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 150,
+              height: 150,
+              child: Image.asset(DataHelper.bosFavoriIkon),
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Henüz hiçbir şeyi beğenmedin",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+
+            Text(
+              "Beğendiğin ürünleri işaretle ve dünyayla paylaş!",
+              style: TextStyle(color: Color.fromRGBO(199, 199, 199, 1)),
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(255, 63, 86, 1),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => MainBottomNavigation(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Keşfet",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

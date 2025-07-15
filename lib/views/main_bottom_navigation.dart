@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:letgo_clone/views/bottom_navigation_views/hesap_pages/hesap_page.dart';
 import 'package:letgo_clone/views/bottom_navigation_views/ilanlarim_pages/ilanlarim_page.dart';
 import 'package:letgo_clone/views/bottom_navigation_views/main_page.dart';
-import 'package:letgo_clone/views/bottom_navigation_views/sat_page.dart';
-import 'package:letgo_clone/views/bottom_navigation_views/sohbet_page.dart';
+import 'package:letgo_clone/views/bottom_navigation_views/sat_pages/sat_page.dart';
+import 'package:letgo_clone/views/bottom_navigation_views/sohbet_pages/sohbet_page.dart';
 
 class MainBottomNavigation extends StatefulWidget {
   const MainBottomNavigation({super.key});
@@ -68,7 +68,7 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
             ],
           ),
           Positioned(
-            bottom: 55,
+            bottom: 50,
             left: MediaQuery.of(context).size.width / 2 - 30,
             child: GestureDetector(
               onTap: () {

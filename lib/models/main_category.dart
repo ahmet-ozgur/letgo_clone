@@ -20,7 +20,7 @@ enum MainCategory {
   allCategories          
 }
 
-// MainCategory için extension - UI'deki isimlendirmeler
+//MainCategory için extension - UI'deki isimlendirmeler
 extension MainCategoryExtension on MainCategory {
   String get name {
     switch (this) {

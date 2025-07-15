@@ -75,16 +75,17 @@ class LetGoItem {
     }
   }
 
+  //İlanlarım sayfasındaki etkin/satıldı/red için renkler, pending ekleyebilirim.
   Color get statusColor {
     switch (status) {
       case ItemStatus.active:
-        return Colors.green;
+        return Color.fromRGBO(47, 129, 255, 1);
       case ItemStatus.pending:
         return Colors.orange;
       case ItemStatus.rejected:
-        return Colors.red;
+        return Color.fromRGBO(159, 37, 62, 1);
       case ItemStatus.sold:
-        return Colors.blue;
+        return Color.fromRGBO(138, 175, 96, 1);
     }
   }
 
@@ -107,7 +108,7 @@ class LetGoItem {
     return category.name;
   }
 
-  //Ürün Kart Tasarımında Güncelleyeceğim
+  //Ana Sayfa  Ürün Kart Tasarımında Güncelleyeceğim
   List<String> get featureBadges {
     List<String> badges = [];
     if (isFeatured) badges.add("Öne Çıkan");

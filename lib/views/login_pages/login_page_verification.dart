@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:letgo_clone/views/main_bottom_navigation.dart';
+import 'dart:async';
 
 class LoginPageVerification extends StatefulWidget {
-  const LoginPageVerification({super.key});
+  final String phoneNumber;
+
+  const LoginPageVerification({super.key, required this.phoneNumber});
 
   @override
   State<LoginPageVerification> createState() =>
@@ -16,13 +19,14 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade900,
+        automaticallyImplyLeading: false,
         //Leading Icon - S
         leadingWidth: 40.w,
         leading: Padding(
           padding: EdgeInsets.only(left: 12.0.w),
           child: InkWell(
+            onTap: () => Navigator.pop(context),
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.all(0),
@@ -47,311 +51,497 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
         ),
         centerTitle: true,
         //Title - F
-        //Alt Çizgi -S
+
+        //Alt Çizgi - S
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
           child: Container(color: Colors.black26, height: 1.h),
         ),
         //Alt Çizgi - F
       ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 15.h),
-            //Text Bilgi - S
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: 20),
-                Text(
-                  "Şuraya 4 haneli bir kod gönderdik.",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Color.fromRGBO(160, 160, 160, 1),
-                  ),
-                ),
-                Text(
-                  "+90 507 847 82 24",
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: Color.fromRGBO(160, 160, 160, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            //Text Bilgi - F
-            SizedBox(height: 20.h),
-            //Numara değiştir - S
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(width: 20),
-                Icon(
-                  Icons.edit,
-                  size: 22,
-                  color: Color.fromRGBO(255, 61, 81, 1),
-                ),
-                SizedBox(width: 5),
-                Text(
-                  "Numara değiştir",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Color.fromRGBO(255, 61, 81, 1),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            //Numara değiştir - F
-            SizedBox(height: 30.h),
-            //Telefon No Alanı - S
-            PhoneForm(),
-            //Telefon No Alanı - F
-          ],
-        ),
-      ),
+      body: VerificationForm(phoneNumber: widget.phoneNumber),
     );
   }
 }
 
-class PhoneForm extends StatefulWidget {
-  const PhoneForm({super.key});
+class VerificationForm extends StatefulWidget {
+  final String phoneNumber;
+
+  const VerificationForm({super.key, required this.phoneNumber});
 
   @override
-  State<PhoneForm> createState() => _PhoneFormState();
+  State<VerificationForm> createState() => _VerificationFormState();
 }
 
-class _PhoneFormState extends State<PhoneForm> {
-  //Key - Validator
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  //TF Değişkeni
-  TextEditingController tfPhone = TextEditingController();
-  //Hata var mı ? TextFormField renk değişimi
-  bool _hasError = false;
-  //Metin var mı kontrolü - Devam Et Buton Renk değişimi için.
-  bool _hasText = false;
-  //Etkileşim kontrolü
-  bool _hasInteracted = false;
+class _VerificationFormState extends State<VerificationForm> {
+  //Controller Tanımlamaları - S
+  TextEditingController tf1 = TextEditingController();
+  TextEditingController tf2 = TextEditingController();
+  TextEditingController tf3 = TextEditingController();
+  TextEditingController tf4 = TextEditingController();
+  //Controller Tanımlamaları - F
+
+  //Focus Node Tanımlamaları - S
+  FocusNode focus1 = FocusNode();
+  FocusNode focus2 = FocusNode();
+  FocusNode focus3 = FocusNode();
+  FocusNode focus4 = FocusNode();
+  //Focus Node Tanımlamaları - F
+
+  //Timer Değişkenleri - S
+  Timer? timer;
+  int kalanSaniye = 15;
+  bool yeniKodIsteButton = false;
+  //Timer Değişkenleri - F
+
+  //Kod Kontrol Değişkenleri - S
+  String mevcutKod = "";
+  bool kodTamMi = false;
+  bool kodDogruMu = false;
+  //Kod Kontrol Değişkenleri - F
+
   @override
   void initState() {
     super.initState();
-    tfPhone.addListener(() {
+    timerBaslat();
+
+    //Listener'lar - S
+    tf1.addListener(() {
+      kodKontrolEt();
+      if (tf1.text.isNotEmpty) {
+        FocusScope.of(context).requestFocus(focus2);
+      }
+    });
+    tf2.addListener(() {
+      kodKontrolEt();
+      if (tf2.text.isNotEmpty) {
+        FocusScope.of(context).requestFocus(focus3);
+      }
+    });
+    tf3.addListener(() {
+      kodKontrolEt();
+      if (tf3.text.isNotEmpty) {
+        FocusScope.of(context).requestFocus(focus4);
+      }
+    });
+    tf4.addListener(() {
+      kodKontrolEt();
+      if (tf4.text.isNotEmpty) {
+        FocusScope.of(context).unfocus();
+        kodDogrulama();
+      }
+    });
+    //Listener'lar - F
+  }
+
+  //Timer Başlatma Fonksiyonu - S
+  void timerBaslat() {
+    setState(() {
+      yeniKodIsteButton = false;
+      kalanSaniye = 15;
+    });
+
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        _hasText = tfPhone.text.isNotEmpty;
-        //Bir kere silince "Lütfen telefon numaranızı giriniz." hatası için
-        if (!_hasInteracted && tfPhone.text.isNotEmpty) {
-          _hasInteracted = true;
-        }
-        if (_hasInteracted) {
-          _hasError = !_isValidPhone(tfPhone.text);
+        if (kalanSaniye > 0) {
+          kalanSaniye--;
+        } else {
+          yeniKodIsteButton = true;
+          timer.cancel();
         }
       });
     });
   }
+  //Timer Başlatma Fonksiyonu - F
 
-  bool _isValidPhone(String phone) {
-    if (phone.isEmpty) return false;
-    if (phone.length < 10) return false;
-    if (int.tryParse(phone[0]) != null && int.parse(phone[0]) < 5) {
-      return false;
+  //Kod Kontrol Fonksiyonu - S
+  void kodKontrolEt() {
+    setState(() {
+      mevcutKod = tf1.text + tf2.text + tf3.text + tf4.text;
+      if (mevcutKod.length == 4) {
+        kodTamMi = true;
+      } else {
+        kodTamMi = false;
+      }
+
+      if (mevcutKod == "1234") {
+        kodDogruMu = true;
+      } else {
+        kodDogruMu = false;
+      }
+    });
+  }
+  //Kod Kontrol Fonksiyonu - F
+
+  //Kod Doğrulama Fonksiyonu - S
+  void kodDogrulama() {
+    if (kodTamMi) {
+      if (kodDogruMu) {
+        //Doğru kod Ana sayfaya git
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => MainBottomNavigation()),
+        );
+      } else {
+        //Yanlış kod Hata göster
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              "Yanlış kod! Lütfen tekrar deneyin.",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+        //Alanları temizle
+        tf1.clear();
+        tf2.clear();
+        tf3.clear();
+        tf4.clear();
+        FocusScope.of(context).requestFocus(focus1);
+      }
     }
-    return true;
+  }
+  //Kod Doğrulama Fonksiyonu - F
+
+  //Yeni Kod İste Fonksiyonu - S
+  void yeniKodIste() {
+    timerBaslat();
+    tf1.clear();
+    tf2.clear();
+    tf3.clear();
+    tf4.clear();
+    FocusScope.of(context).requestFocus(focus1);
+  }
+  //Yeni Kod İste Fonksiyonu - F
+
+  //Zaman Formatı Fonksiyonu - S
+  String zamanFormat(int saniye) {
+    int dakika = saniye ~/ 60;
+    int kalanSn = saniye % 60;
+    return "$dakika:${kalanSn.toString().padLeft(2, '0')}";
+  }
+  //Zaman Formatı Fonksiyonu - F
+
+  @override
+  void dispose() {
+    //Timer dispose - S
+    timer?.cancel();
+    //Timer dispose - F
+
+    //Controller dispose - S
+    tf1.dispose();
+    tf2.dispose();
+    tf3.dispose();
+    tf4.dispose();
+    //Controller dispose - F
+
+    //Focus dispose - S
+    focus1.dispose();
+    focus2.dispose();
+    focus3.dispose();
+    focus4.dispose();
+    //Focus dispose - F
+
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            //TextFormField - S
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: SizedBox(
-                width: double.infinity.w,
-                height: 57.h,
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical(y: 1),
-                  textAlign: TextAlign.left,
-                  keyboardType: TextInputType.number,
-                  controller: tfPhone,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
-                  decoration: InputDecoration(
-                    //Prefix Kısmı - S
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10.w,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Cep Telefon",
-                            style: TextStyle(
-                              color: _hasError
-                                  ? Colors.red
-                                  : Colors.white70,
-                              fontSize: 12.sp,
-                            ),
-                          ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                width: 25.w,
-                                height: 20.h,
-                                child: Image.asset(
-                                  "assets/images/turkey_flag.png",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                              SizedBox(width: 3.w),
-                              Text(
-                                "+90",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 2.h),
-                        ],
-                      ),
-                    ),
-                    //Prefix Kısmı - F
-                    //Border Decorationlar
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.red),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  //Uzunluk
-                  maxLength: 10,
-                  //Validator kontrolleri
-                  validator: (tfPhone) {
-                    String? errorMsg;
-                    if (!_hasInteracted) {
-                      // Yazmaya başlamadan tepki gösterme
-                      return null;
-                    }
-                    if (tfPhone == null || tfPhone.isEmpty) {
-                      errorMsg = "Lütfen telefon numaranızı giriniz.";
-                    } else if (int.tryParse(tfPhone[0]) != null &&
-                        int.parse(tfPhone[0]) < 5) {
-                      errorMsg =
-                          "Lütfen geçerli bir telefon numarası giriniz.";
-                    } else if (tfPhone.length < 10) {
-                      errorMsg = "Telefon numarası 10 haneli olmalıdır.";
-                    }
-                    return errorMsg;
-                  },
-                ),
-              ),
-            ),
+    return Column(
+      children: [
+        SizedBox(height: 15.h),
 
-            //TextFormField - F
-            Spacer(),
-            //Devam Et Buton - S
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.grey.shade900,
-                // Sadece üst kısmında ince çizgi
-                border: Border(
-                  top: BorderSide(color: Colors.black26, width: 1.0),
-                ),
-                // Üst kısmında gölge
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, -2),
-                    blurRadius: 4.0,
-                    spreadRadius: 0,
-                  ),
-                ],
-              ),
-              width: double.infinity.w,
-              height: 66.h,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 15.h,
-                  horizontal: 20.w,
-                ),
-                child: SizedBox(
-                  width: double.infinity.w,
-                  height: 36.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: _hasText
-                          ? Color.fromRGBO(255, 63, 86, 1)
-                          : Colors.grey.shade800,
+        //Üst Bilgi Metni - S
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(
+                    text: "Şuraya 4 haneli bir kod gönderdik. ",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Color.fromRGBO(160, 160, 160, 1),
                     ),
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        debugPrint("Tel no ");
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(
-                        //     content: Text(
-                        //       "Telefon numarası geçerli, hoşgeldiniz.",
-                        //       style: TextStyle(color: Colors.white),
-                        //     ),
-                        //     backgroundColor: Color.fromRGBO(66, 66, 66, 1),
-                        //   ),
-                        // );
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => MainBottomNavigation(),
-                          ),
-                        );
-                      } //else {
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: Text(
-                      //       "Lütfen geçerli bir telefon numarası giriniz.",
-                      //       style: TextStyle(color: Colors.white),
-                      //     ),
-                      //     backgroundColor: Color.fromRGBO(66, 66, 66, 1),
-                      //   ),
-                      // );
-                      //}
-                    },
-                    child: Text(
-                      "Yeni kod iste",
+                    children: [
+                      TextSpan(
+                        text: widget.phoneNumber,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Color.fromRGBO(160, 160, 160, 1),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //Üst Bilgi Metni - F
+        SizedBox(height: 20.h),
+
+        //Numara Değiştir Linki - S
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.edit,
+                      size: 22.sp,
+                      color: Color.fromRGBO(255, 61, 81, 1),
+                    ),
+                    SizedBox(width: 5.w),
+                    Text(
+                      "Numara değiştir",
                       style: TextStyle(
-                        color: _hasText
-                            ? Colors.white
-                            : Colors.grey.shade500,
+                        fontSize: 14.sp,
+                        color: Color.fromRGBO(255, 61, 81, 1),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //Numara Değiştir Linki - F
+        SizedBox(height: 30.h),
+
+        //Kod Giriş Alanları - S
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              //1. Alan - S
+              Container(
+                width: 60.w,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: tf1.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.white54,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
+                  controller: tf1,
+                  focusNode: focus1,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  maxLength: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    counterText: "",
+                  ),
+                  onChanged: (value) {
+                    if (value.isEmpty && focus1.hasFocus) {
+                      // Geri tuşa basılmışsa
+                    }
+                  },
+                ),
+              ),
+              //1. Alan - F
+
+              //2. Alan - S
+              Container(
+                width: 60.w,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: tf2.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.white54,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
+                  controller: tf2,
+                  focusNode: focus2,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  maxLength: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    counterText: "",
+                  ),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      FocusScope.of(context).requestFocus(focus1);
+                    }
+                  },
+                ),
+              ),
+              //2. Alan - F
+
+              //3. Alan - S
+              Container(
+                width: 60.w,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: tf3.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.white54,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
+                  controller: tf3,
+                  focusNode: focus3,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  maxLength: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    counterText: "",
+                  ),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      FocusScope.of(context).requestFocus(focus2);
+                    }
+                  },
+                ),
+              ),
+              //3. Alan - F
+
+              //4. Alan - S
+              Container(
+                width: 60.w,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: tf4.text.isNotEmpty
+                        ? Colors.white
+                        : Colors.white54,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: TextField(
+                  controller: tf4,
+                  focusNode: focus4,
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.center,
+                  maxLength: 1,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    counterText: "",
+                  ),
+                  onChanged: (value) {
+                    if (value.isEmpty) {
+                      FocusScope.of(context).requestFocus(focus3);
+                    }
+                  },
+                ),
+              ),
+              //4. Alan - F
+            ],
+          ),
+        ),
+
+        //Kod Giriş Alanları - F
+        SizedBox(height: 30.h),
+
+        //Timer Yazısı - S
+        if (!yeniKodIsteButton)
+          Text(
+            "${zamanFormat(kalanSaniye)} içinde tekrar dene",
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: Color.fromRGBO(160, 160, 160, 1),
+            ),
+          ),
+
+        //Timer Yazısı - F
+        Spacer(),
+
+        //Yeni Kod İste Butonu - S
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade900,
+            border: Border(
+              top: BorderSide(color: Colors.black26, width: 1.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                offset: Offset(0, -2),
+                blurRadius: 4.0,
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          width: double.infinity.w,
+          height: 66.h,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: 15.h,
+              horizontal: 20.w,
+            ),
+            child: SizedBox(
+              width: double.infinity.w,
+              height: 36.h,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: yeniKodIsteButton
+                      ? Color.fromRGBO(255, 63, 86, 1)
+                      : Colors.grey.shade800,
+                ),
+                onPressed: yeniKodIsteButton ? yeniKodIste : null,
+                child: Text(
+                  "Yeni kod iste",
+                  style: TextStyle(
+                    color: yeniKodIsteButton
+                        ? Colors.white
+                        : Colors.grey.shade500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ),
-            //Devam Et Buton - F
-          ],
+          ),
         ),
-      ),
+        //Yeni Kod İste Butonu - F
+      ],
     );
   }
 }

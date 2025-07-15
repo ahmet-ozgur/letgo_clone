@@ -16,12 +16,17 @@ class DataHelper {
     "assets/images/placeholder2.jpg",
   ];
   static String onecikarLogoPath = "assets/images/onecikar.png";
-  // Deneme KUllanıcı Listesi
+  static String reklam1 = "assets/images/ads1.png";
+  static String kalpIkon = "assets/images/kalp_ikon.png";
+  static String haritaResim = "assets/images/harita.png";
+  static String bosSepetIkon = "assets/images/emptycart.png";
+  static String bosFavoriIkon = "assets/images/favoriyok.png";
+  //Deneme KUllanıcı Listesi
   static List<User> users = [
     User(
       id: "user1",
-      name: "Ahmet Kaya",
-      profileImagePath: "assets/images/user1.jpg",
+      name: "Demir Kaya",
+      profileImagePath: "assets/images/user1.png",
       memberSince: DateTime(2020, 5, 15),
       rating: 4.8,
       followerCount: 245,
@@ -33,7 +38,7 @@ class DataHelper {
     User(
       id: "user2",
       name: "Zeynep Demir",
-      profileImagePath: "assets/images/user2.jpg",
+      profileImagePath: "assets/images/user2.png",
       memberSince: DateTime(2019, 8, 22),
       rating: 4.9,
       followerCount: 567,
@@ -44,7 +49,7 @@ class DataHelper {
     User(
       id: "user3",
       name: "Mehmet Özkan",
-      profileImagePath: "assets/images/user3.jpg",
+      profileImagePath: "assets/images/user3.png",
       memberSince: DateTime(2021, 1, 10),
       rating: 4.2,
       followerCount: 89,
@@ -55,7 +60,7 @@ class DataHelper {
     User(
       id: "user4",
       name: "Ayşe Yılmaz",
-      profileImagePath: "assets/images/user4.jpg",
+      profileImagePath: "assets/images/user4.png",
       memberSince: DateTime(2022, 3, 5),
       rating: 4.6,
       followerCount: 156,
@@ -65,7 +70,7 @@ class DataHelper {
     ),
   ];
 
-  // Kategori listesi artık enum'dan geliyor
+  //Kategori listesi enum
   static List<MainCategory> get categoryList {
     //Tüm Kategoriler diye butonun olmadığı gerçek kategori listesi
     return MainCategory.values
@@ -73,12 +78,12 @@ class DataHelper {
         .toList();
   }
 
-  //Tüm Kategoriler diye butonun olduğu liste, ana sayfa kategori listview'ında kullanıyorum
+  //Tüm Kategoriler diye butonun olduğu liste, ana sayfa kategori listview'ında
   static List<MainCategory> get allCategoryList {
     return MainCategory.values.toList();
   }
 
-  // Deneme Ürün Listesi
+  //Deneme Ürün Listesi
   static List<LetGoItem> allItems = [
     // Etkin İlanlar
     LetGoItem(
@@ -441,7 +446,7 @@ class DataHelper {
     ),
   ];
 
-  // Temel filtreleme fonksiyonları
+  //Temel filtreleme fonksiyonları
   static List<LetGoItem> getAllItems() {
     return allItems;
   }
@@ -470,7 +475,7 @@ class DataHelper {
         .toList();
   }
 
-  // Kategori bazlı filtreleme
+  //Kategori bazlı filtreleme
   static List<LetGoItem> getItemsByCategory(MainCategory category) {
     if (category == MainCategory.allCategories) {
       return getActiveItems();
@@ -484,7 +489,7 @@ class DataHelper {
         .toList();
   }
 
-  // Kategori bazlı ilan sayısı
+  //Kategori bazlı ilan sayısı
   static int getItemCountByCategory(MainCategory category) {
     if (category == MainCategory.allCategories) {
       return getActiveItems().length;
@@ -492,7 +497,7 @@ class DataHelper {
     return getItemsByCategory(category).length;
   }
 
-  // Diğer filtreleme fonksiyonları
+  //Diğer filtreleme fonksiyonları
   static List<LetGoItem> getFeaturedItems() {
     return allItems
         .where(
@@ -521,7 +526,7 @@ class DataHelper {
         .toList();
   }
 
-  // Utility fonksiyonları
+  //Utility fonksiyonları
   static User? getUserById(String userId) {
     try {
       return users.firstWhere((user) => user.id == userId);
@@ -536,5 +541,136 @@ class DataHelper {
     } catch (e) {
       return null;
     }
+  }
+
+  //Sepet Yönetim
+  static Map<String, int> _cart = {};
+  //Sepete ürün ekle varsa arttırma kontrollü
+  static bool addToCart(LetGoItem item) {
+    if (_cart.containsKey(item.id)) {
+      _cart[item.id] = _cart[item.id]! + 1;
+      return false;
+    } else {
+      _cart[item.id] = 1;
+      return true;
+    }
+  }
+
+  //Sepetten ürün çıkar
+  static void removeFromCart(String itemId) {
+    _cart.remove(itemId);
+  }
+
+  // Ürün adedini güncelle
+  static void updateCartQuantity(String itemId, int quantity) {
+    if (quantity <= 0) {
+      removeFromCart(itemId);
+    } else {
+      _cart[itemId] = quantity;
+    }
+  }
+
+  //Sepet boşalt
+  static void clearCart() {
+    _cart.clear();
+  }
+
+  //Sepetteki toplam ürün sayısı
+  static int getCartItemCount() {
+    return _cart.values.fold(0, (total, quantity) => total + quantity);
+  }
+
+  //Sepetteki toplam fiyat
+  static double getCartTotalPrice() {
+    double total = 0;
+    _cart.forEach((itemId, quantity) {
+      LetGoItem? item = getItemById(itemId);
+      if (item != null) {
+        total += (item.price * quantity);
+      }
+    });
+    return total;
+  }
+
+  // Ürün sepette mi?
+  static bool isItemInCart(String itemId) {
+    return _cart.containsKey(itemId);
+  }
+
+  // Sepetteki ürün adedi
+  static int getCartItemQuantity(String itemId) {
+    return _cart[itemId] ?? 0;
+  }
+
+  //Sepetteki tüm ürünleri getir
+  static List<Map<String, dynamic>> getCartItems() {
+    List<Map<String, dynamic>> cartItems = [];
+    _cart.forEach((itemId, quantity) {
+      LetGoItem? item = getItemById(itemId);
+      if (item != null) {
+        cartItems.add({'item': item, 'quantity': quantity});
+      }
+    });
+
+    return cartItems;
+  }
+
+  //Sepetteki farklı ürün çeşidi sayısı
+  static int getCartUniqueItemCount() {
+    return _cart.length;
+  }
+  
+  //Favori Yönetimi
+  static Set<String> _favoriteItems =
+      {}; // Set kullanıyoruz çünkü benzersiz olmalı
+
+  //Favorilere ürün ekle/çıkar (toggle)
+  static bool toggleFavorite(LetGoItem item) {
+    if (_favoriteItems.contains(item.id)) {
+      _favoriteItems.remove(item.id);
+      return false;
+    } else {
+      _favoriteItems.add(item.id);
+      return true;
+    }
+  }
+
+  //Favorilerden ürün çıkar
+  static void removeFromFavorites(String itemId) {
+    _favoriteItems.remove(itemId);
+  }
+
+  //Favorileri temizle
+  static void clearFavorites() {
+    _favoriteItems.clear();
+  }
+
+  //Ürün favoride mi?
+  static bool isItemInFavorites(String itemId) {
+    return _favoriteItems.contains(itemId);
+  }
+
+  //Favori ürün sayısı
+  static int getFavoriteItemCount() {
+    return _favoriteItems.length;
+  }
+
+  //Favori ürünleri getir
+  static List<LetGoItem> getFavoriteItems() {
+    List<LetGoItem> favoriteItems = [];
+
+    for (String itemId in _favoriteItems) {
+      LetGoItem? item = getItemById(itemId);
+      if (item != null) {
+        favoriteItems.add(item);
+      }
+    }
+
+    return favoriteItems;
+  }
+
+  //Favori ürün ID'lerini getir
+  static Set<String> getFavoriteItemIds() {
+    return Set.from(_favoriteItems);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:letgo_clone/views/main_bottom_navigation.dart';
+import 'package:letgo_clone/views/login_pages/login_page_verification.dart'; // Bu import'u ekleyin
 
 class LoginPagePhoneNumber extends StatefulWidget {
   const LoginPagePhoneNumber({super.key});
@@ -23,6 +23,7 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
         leading: Padding(
           padding: EdgeInsets.only(left: 12.0.w),
           child: InkWell(
+            onTap: () => Navigator.pop(context),
             child: Container(
               alignment: Alignment.center,
               padding: EdgeInsets.all(0),
@@ -53,8 +54,8 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
           preferredSize: Size.fromHeight(1),
           child: Container(color: Colors.black26, height: 1.h),
         ),
-        //Alt Çizgi - F
 
+        //Alt Çizgi - F
       ),
       body: Center(
         child: Column(
@@ -68,14 +69,14 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
                 color: Color.fromRGBO(160, 160, 160, 1),
               ),
             ),
-            //Text Bilgi - F
 
+            //Text Bilgi - F
             SizedBox(height: 20.h),
 
             //Telefon No Alanı - S
             PhoneForm(),
-            //Telefon No Alanı - F
 
+            //Telefon No Alanı - F
           ],
         ),
       ),
@@ -290,9 +291,12 @@ class _PhoneFormState extends State<PhoneForm> {
                         formKey.currentState!.save();
                         debugPrint("Tel no geçerli: $_phoneNumber");
 
+                        // Telefon numarasını doğrulama sayfasına geçir
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => MainBottomNavigation(),
+                            builder: (context) => LoginPageVerification(
+                              phoneNumber: "+90 ${_phoneNumber}",
+                            ),
                           ),
                         );
                       }
