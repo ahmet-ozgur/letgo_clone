@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
 import 'package:letgo_clone/models/user.dart';
+import 'package:letgo_clone/views/item_detail_page.dart';
 
 class MesajlarimPage extends StatefulWidget {
   const MesajlarimPage({super.key});
@@ -106,125 +107,136 @@ class SohbetKartTasarim extends StatelessWidget {
       return SizedBox.shrink();
     }
 
-    return Container(
-      height: 125,
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              //Stack Kısmı Image+Profile Pic - S
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  SizedBox(
-                    width: 75,
-                    height: 75,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.asset(
-                        activeItem.mainImage,
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  //Profile Pic
-                  Positioned(
-                    bottom: -12,
-                    right: -12,
-                    child: CircleAvatar(
-                      radius: 18,
-                      backgroundImage: AssetImage(user.profileImagePath),
-                    ),
-                  ),
-                ],
-              ),
-              //Stack Kısmı Image+Profile Pic - F
-              SizedBox(width: 20),
-              //Orta Kısım 1 Column İçi 3 Row - S
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return ItemDetailPage(urun: activeItem);
+            },
+          ),
+        );
+      },
+      child: Container(
+        height: 125,
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                //Stack Kısmı Image+Profile Pic - S
+                Stack(
+                  clipBehavior: Clip.none,
                   children: [
-                    //User Name + Time - S
-                    Row(
-                      children: [
-                        Text(
-                          user.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    SizedBox(
+                      width: 75,
+                      height: 75,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.asset(
+                          activeItem.mainImage,
+                          fit: BoxFit.fill,
                         ),
-                        Spacer(),
-                        RandomTimeWidget(),
-                      ],
-                    ),
-                    //User Name + Time - F
-                    //Rating -S
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        StarRatingWidget(rating: user.rating),
-                        SizedBox(width: 5),
-                        Text(
-                          "${user.rating} ",
-                          style: TextStyle(
-                            color: Color.fromRGBO(187, 187, 187, 1),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "- Satıcı Puanı",
-                          style: TextStyle(
-                            color: Color.fromRGBO(187, 187, 187, 1),
-                            fontSize: 10.5,
-                          ),
-                        ),
-                      ],
-                    ),
-                    //Rating -F
-                    //Title -S
-                    Text(
-                      "${activeItem.title}",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 10.5,
                       ),
                     ),
-                    //Title -F
-                    SizedBox(height: 5),
-                    //Mesaj - S
-                    RandomMessage(),
-                    //Mesaj - F
+                    //Profile Pic
+                    Positioned(
+                      bottom: -12,
+                      right: -12,
+                      child: CircleAvatar(
+                        radius: 18,
+                        backgroundImage: AssetImage(user.profileImagePath),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              //Orta Kısım 1 Column İçi 3 Row - F
-              //Sondaki İkon - S
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Color.fromRGBO(64, 64, 64, 1),
-                    child: Icon(
-                      Icons.more_vert,
-                      size: 22,
-                      color: Colors.white,
-                    ),
+                //Stack Kısmı Image+Profile Pic - F
+                SizedBox(width: 20),
+                //Orta Kısım 1 Column İçi 3 Row - S
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //User Name + Time - S
+                      Row(
+                        children: [
+                          Text(
+                            user.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Spacer(),
+                          RandomTimeWidget(),
+                        ],
+                      ),
+                      //User Name + Time - F
+                      //Rating -S
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          StarRatingWidget(rating: user.rating),
+                          SizedBox(width: 5),
+                          Text(
+                            "${user.rating} ",
+                            style: TextStyle(
+                              color: Color.fromRGBO(187, 187, 187, 1),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            "- Satıcı Puanı",
+                            style: TextStyle(
+                              color: Color.fromRGBO(187, 187, 187, 1),
+                              fontSize: 10.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      //Rating -F
+                      //Title -S
+                      Text(
+                        "${activeItem.title}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10.5,
+                        ),
+                      ),
+                      //Title -F
+                      SizedBox(height: 5),
+                      //Mesaj - S
+                      RandomMessage(),
+                      //Mesaj - F
+                    ],
                   ),
-                ],
-              ),
-              //Sondaki İkon - F
-            ],
-          ),
-          SizedBox(height: 15),
-          Divider(color: Colors.white12),
-        ],
+                ),
+                //Orta Kısım 1 Column İçi 3 Row - F
+                //Sondaki İkon - S
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Color.fromRGBO(64, 64, 64, 1),
+                      child: Icon(
+                        Icons.more_vert,
+                        size: 22,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                //Sondaki İkon - F
+              ],
+            ),
+            SizedBox(height: 15),
+            Divider(color: Colors.white12),
+          ],
+        ),
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
+import 'package:letgo_clone/views/cart_page.dart';
 import 'package:letgo_clone/widgets/grid_pageview_widget.dart';
 
 class ItemDetailPage extends StatefulWidget {
@@ -22,6 +23,12 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
   // Kısa metin (ilk 100 karakter)
   String get shortText =>
       fullText.length > 100 ? fullText.substring(0, 100) : fullText;
+
+  // Sepet güncellendiğinde çağrılacak callback fonksiyonu
+  void onCartUpdated() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,18 +79,58 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 
         //Actions - S
         actions: [
-          CircleAvatar(
-            backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-            child: Icon(Icons.favorite, size: 22, color: Colors.white),
+          // Sepet İkonu - MainPage'deki gibi badge ile
+          Stack(
+            children: [
+              CircleAvatar(
+                backgroundColor: Color.fromRGBO(44, 44, 44, 1),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    size: 22,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    //Sepetten dönüşü beklemek için
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => CartPage()),
+                    );
+                    setState(() {});
+                  },
+                ),
+              ),
+              //Sepetteki ürün sayısı badge'i
+              if (DataHelper.getCartItemCount() > 0)
+                Positioned(
+                  right: 0,
+                  top: 0,
+                  child: Container(
+                    padding: EdgeInsets.all(2),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    constraints: BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
+                    child: Text(
+                      '${DataHelper.getCartItemCount()}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
           ),
           SizedBox(width: 12),
           CircleAvatar(
             backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-            child: Icon(
-              Icons.notifications,
-              size: 22,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.share, size: 22, color: Colors.white),
           ),
         ],
         actionsPadding: EdgeInsets.only(right: 12),
@@ -163,17 +210,41 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                 Positioned(
                   top: 15,
                   right: 15,
-                  child: CircleAvatar(
-                    backgroundColor: Color.fromRGBO(44, 44, 44, 1),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 22,
-                      color: Colors.white,
+                  child: GestureDetector(
+                    // Bu satırı ekleyin
+                    onTap: () {
+                      // Bu satırı ekleyin
+                      bool wasAdded = DataHelper.toggleFavorite(
+                        widget.urun,
+                      ); // Bu satırı ekleyin
+                      setState(
+                        () {},
+                      ); // UI'ı güncelle  // Bu satırı ekleyin
+                    }, // Bu satırı ekleyin
+                    child: CircleAvatar(
+                      // Bu satırı değiştirin (CircleAvatar -> child: CircleAvatar)
+                      backgroundColor: Color.fromRGBO(44, 44, 44, 1),
+                      child: Icon(
+                        DataHelper.isItemInFavorites(
+                              widget.urun.id,
+                            ) // Bu satırı değiştirin
+                            ? Icons
+                                  .favorite // Bu satırı değiştirin
+                            : Icons
+                                  .favorite_border, // Bu satırı değiştirin
+                        size: 22,
+                        color:
+                            DataHelper.isItemInFavorites(
+                              widget.urun.id,
+                            ) // Bu satırı değiştirin
+                            ? Colors
+                                  .red // Bu satırı değiştirin
+                            : Colors.white, // Bu satırı değiştirin
+                      ),
                     ),
-                  ),
+                  ), // Bu satırı ekleyin
                 ),
                 // Sağ üst - Favorite İkonu - F
-
                 // Sol alt - Cüzdanım Güvende + Ücretsiz Kargo - S
                 Positioned(
                   bottom: 65,
@@ -732,7 +803,10 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
       ),
       //Body -F
       //NavBar Butonlar - S
-      bottomNavigationBar: ItemDetailBottomBarWidget(),
+      bottomNavigationBar: ItemDetailBottomBarWidget(
+        urun: widget.urun,
+        onCartUpdated: onCartUpdated, // Callback'i burada geçiriyoruz
+      ),
       //NavBar Butonlar - F
     );
   }
@@ -786,7 +860,14 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
 }
 
 class ItemDetailBottomBarWidget extends StatelessWidget {
-  const ItemDetailBottomBarWidget({super.key});
+  final LetGoItem urun;
+  final VoidCallback onCartUpdated;
+
+  const ItemDetailBottomBarWidget({
+    super.key,
+    required this.urun,
+    required this.onCartUpdated,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -850,7 +931,7 @@ class ItemDetailBottomBarWidget extends StatelessWidget {
 
           SizedBox(width: 10),
 
-          // Hemen al buton
+          // Hemen al buton - Sepete ekle özelliği ekledim
           Expanded(
             child: Container(
               height: 50,
@@ -861,7 +942,28 @@ class ItemDetailBottomBarWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // Sepete ekleme işlemi
+                  bool wasAdded = DataHelper.addToCart(urun);
+                  if (wasAdded) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${urun.title} sepete eklendi!"),
+                        backgroundColor: Colors.green,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${urun.title} zaten sepette!"),
+                        backgroundColor: Colors.orange,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                  onCartUpdated(); // UI'ı güncelle
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -872,7 +974,7 @@ class ItemDetailBottomBarWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      "Hemen Al",
+                      "Sepete Ekle",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

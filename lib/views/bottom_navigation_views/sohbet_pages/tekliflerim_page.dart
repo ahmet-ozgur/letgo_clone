@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
+import 'package:letgo_clone/views/item_detail_page.dart';
 
 class TekliflerimPage extends StatefulWidget {
   const TekliflerimPage({super.key});
@@ -65,232 +66,241 @@ class TeklifUrunKart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
-            child: Column(
-              children: [
-                //Title + Icon Row - S
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${urun.title}",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Spacer(),
-                    Icon(
-                      Icons.keyboard_arrow_right,
-                      color: Color.fromRGBO(255, 63, 86, 1),
-                      size: 30,
-                    ),
-                  ],
-                ),
-                //Title + Icon Row - F
-                Divider(color: Colors.white10),
-                //Row(Image+Column) - S
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 140,
-                      width: 120,
-                      child: ClipRRect(
-                        borderRadius: BorderRadiusGeometry.circular(8),
-                        child: Image.asset(
-                          urun.mainImage,
-                          fit: BoxFit.fill,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ItemDetailPage(urun: urun),
+          ),
+        );
+      },
+      child: Container(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
+              child: Column(
+                children: [
+                  //Title + Icon Row - S
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${urun.title}",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
+                      Spacer(),
+                      Icon(
+                        Icons.keyboard_arrow_right,
+                        color: Color.fromRGBO(255, 63, 86, 1),
+                        size: 30,
+                      ),
+                    ],
+                  ),
+                  //Title + Icon Row - F
+                  Divider(color: Colors.white10),
+                  //Row(Image+Column) - S
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 140,
+                        width: 120,
+                        child: ClipRRect(
+                          borderRadius: BorderRadiusGeometry.circular(8),
+                          child: Image.asset(
+                            urun.mainImage,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          Text(
+                            "Ürün Fiyatı:",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Teklif Edilen Fiyat:",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "Durum:",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 20),
+                      //Fiyatlar Column
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 5),
+                          Text(
+                            "${urun.price} TL",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            "${(urun.price) * 0.9} TL",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_alarm_rounded,
+                                color: Colors.white70,
+                                size: 22,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Cevap Bekliyor",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  //Row(Image+Column) - F
+                  SizedBox(height: 15),
+                  //Satıcı Cevap Verme Süresi - S
+                  Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.black,
                     ),
-                    SizedBox(width: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 5),
+                        Icon(
+                          Icons.hourglass_bottom,
+                          color: Color.fromRGBO(33, 195, 244, 1),
+                          size: 22,
+                        ),
                         Text(
-                          "Ürün Fiyatı:",
+                          "Satıcının cevap vermesi için kalan süre: ",
                           style: TextStyle(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 12,
                           ),
                         ),
-                        SizedBox(height: 10),
                         Text(
-                          "Teklif Edilen Fiyat:",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Durum:",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 20),
-                    //Fiyatlar Column
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5),
-                        Text(
-                          "${urun.price} TL",
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "${(urun.price) * 0.9} TL",
+                          "23 saat 59 dakika",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.access_alarm_rounded,
-                              color: Colors.white70,
-                              size: 22,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Cevap Bekliyor",
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                      ],
+                    ),
+                  ),
+                  //Satıcı Cevap Verme Süresi - F
+                  SizedBox(height: 10),
+                  //Butonlar Row - S
+                  SizedBox(
+                    height: 35,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.transparent,
+                              side: BorderSide(
+                                color: Color.fromRGBO(255, 63, 86, 1),
+                                width: 2,
                               ),
                             ),
-                          ],
+                            onPressed: () {},
+                            child: Text(
+                              "Teklifi Düzenle",
+                              style: TextStyle(
+                                color: Color.fromRGBO(255, 63, 86, 1),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color.fromRGBO(
+                                255,
+                                63,
+                                86,
+                                1,
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.shopping_cart,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  "Hemen Al",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-                //Row(Image+Column) - F
-                SizedBox(height: 15),
-                //Satıcı Cevap Verme Süresi - S
-                Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.black,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.hourglass_bottom,
-                        color: Color.fromRGBO(33, 195, 244, 1),
-                        size: 22,
-                      ),
-                      Text(
-                        "Satıcının cevap vermesi için kalan süre: ",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                        ),
-                      ),
-                      Text(
-                        "23 saat 59 dakika",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                //Satıcı Cevap Verme Süresi - F
-                SizedBox(height: 10),
-                //Butonlar Row - S
-                SizedBox(
-                  height: 35,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            side: BorderSide(
-                              color: Color.fromRGBO(255, 63, 86, 1),
-                              width: 2,
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Text(
-                            "Teklifi Düzenle",
-                            style: TextStyle(
-                              color: Color.fromRGBO(255, 63, 86, 1),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromRGBO(
-                              255,
-                              63,
-                              86,
-                              1,
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.shopping_cart,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                "Hemen Al",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                //Butonlar Row - F
-              ],
+                  //Butonlar Row - F
+                ],
+              ),
             ),
-          ),
-          Divider(color: Colors.white10, height: 30),
-        ],
+            Divider(color: Colors.white10, height: 30),
+          ],
+        ),
       ),
     );
   }

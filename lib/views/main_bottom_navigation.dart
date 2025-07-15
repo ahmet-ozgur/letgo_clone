@@ -18,16 +18,23 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
   List<Widget> sayfaListesi = [
     MainPage(),
     SohbetPage(),
-    SatPage(),
+    Container(),
     IlanlarimPage(),
     HesapPage(),
   ];
+
   @override
   Widget build(BuildContext context) {
+    // Cihazın bottom padding'ini al (safe area için)
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    // BottomNavigationBar'ın yaklaşık yüksekliği
+    final bottomNavHeight = kBottomNavigationBarHeight;
+
     return Scaffold(
+      // extendBody ile body'yi bottom bar'ın altına uzat
+      extendBody: true,
       body: sayfaListesi[secilenIndex],
       bottomNavigationBar: Stack(
-        //Taşma engellemesi
         clipBehavior: Clip.none,
         children: [
           BottomNavigationBar(
@@ -39,6 +46,9 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
             selectedItemColor: Colors.red,
             unselectedItemColor: Color.fromRGBO(165, 165, 165, 1),
             onTap: (value) {
+              if (value == 2) {
+                return;
+              }
               setState(() {
                 secilenIndex = value;
               });
@@ -53,7 +63,7 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
                 label: "Sohbet",
               ),
               BottomNavigationBarItem(
-                //Sat simgesi placeholder.
+                // Sat simgesi placeholder - şeffaf alan
                 icon: SizedBox(width: 24, height: 24),
                 label: "Sat",
               ),
@@ -67,25 +77,41 @@ class _MainBottomNavigationState extends State<MainBottomNavigation> {
               ),
             ],
           ),
+          // Floating Action Button - Pozisyonu cihaza göre ayarlanmış
           Positioned(
-            bottom: 50,
+            // Bottom padding + biraz yukarı kaydırma için
+            bottom: bottomPadding + 25, // Safe area + istediğin yükseklik
             left: MediaQuery.of(context).size.width / 2 - 30,
             child: GestureDetector(
               onTap: () {
-                setState(() {
-                  secilenIndex = 2;
-                });
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (context) => SatPage()));
               },
-              child: CircleAvatar(
-                backgroundColor: Color.fromRGBO(48, 41, 42, 1),
-                radius: 30,
+              child: Container(
+                // Shadow için container ekledim
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
                 child: CircleAvatar(
-                  radius: 24,
-                  backgroundColor: Color.fromRGBO(244, 67, 88, 1),
-                  child: Icon(
-                    Icons.camera_alt_rounded,
-                    color: Colors.white,
-                    size: 24,
+                  backgroundColor: Color.fromRGBO(48, 41, 42, 1),
+                  radius: 30,
+                  child: CircleAvatar(
+                    radius: 24,
+                    backgroundColor: Color.fromRGBO(244, 67, 88, 1),
+                    child: Icon(
+                      Icons.camera_alt_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
                 ),
               ),

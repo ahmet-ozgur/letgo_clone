@@ -8,12 +8,12 @@ class DataHelper {
   static String mainPageUcretsizKargoBanner =
       "assets/images/ucretsiz_kargo.jpg";
   static List<String> bannerPath = [
-    "assets/images/placeholder2.jpg",
-    "assets/images/placeholder2.jpg",
-    "assets/images/placeholder2.jpg",
-    "assets/images/placeholder2.jpg",
-    "assets/images/placeholder2.jpg",
-    "assets/images/placeholder2.jpg",
+    "assets/images/banner0.png",
+    "assets/images/banner1.png",
+    "assets/images/banner2.png",
+    "assets/images/banner3.png",
+    "assets/images/banner4.png",
+    "assets/images/banner5.png",
   ];
   static String onecikarLogoPath = "assets/images/onecikar.png";
   static String reklam1 = "assets/images/ads1.png";

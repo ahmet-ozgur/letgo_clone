@@ -9,9 +9,12 @@ class UrunKartTasarim extends StatefulWidget {
     super.key,
     required this.testItem,
     this.onCartUpdated,
+    this.onItemTap, // Yeni eklenen callback
   });
   final LetGoItem testItem;
   final VoidCallback? onCartUpdated;
+  final Function(LetGoItem)? onItemTap; // Yeni eklenen callback
+
   @override
   State<UrunKartTasarim> createState() => _UrunKartTasarimState();
 }
@@ -27,13 +30,19 @@ class _UrunKartTasarimState extends State<UrunKartTasarim> {
           //Üst Container - S
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) {
-                    return ItemDetailPage(urun: widget.testItem);
-                  },
-                ),
-              );
+              // Eski navigation kodu yerine callback çağırıyoruz
+              if (widget.onItemTap != null) {
+                widget.onItemTap!(widget.testItem);
+              } else {
+                // Fallback: Eğer callback verilmemişse eski yöntem
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ItemDetailPage(urun: widget.testItem);
+                    },
+                  ),
+                );
+              }
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

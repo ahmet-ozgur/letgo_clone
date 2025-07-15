@@ -7,6 +7,7 @@ import 'package:letgo_clone/views/cart_page.dart';
 import 'package:letgo_clone/views/category_page.dart';
 import 'package:letgo_clone/views/item_detail_page.dart';
 import 'package:letgo_clone/widgets/urun_kart_widget.dart';
+import 'dart:async';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,17 +17,56 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //Kategori Listesi - S
+  //Kategori Listesi
   List<MainCategory> categoryList = DataHelper.allCategoryList;
-  //Pageview Banner Listesi - S
+  //Pageview Banner Listesi
   List<String> bannerPath = DataHelper.bannerPath;
-  //Pageview Banner Listesi - F
   //Pageview Sayfası
   int _currentPage = 0;
   //Ürünler deneme listesi
   List<LetGoItem> testItems = DataHelper.getActiveItems();
+  List<LetGoItem> horizontalItems = DataHelper.getActiveItems()
+      .take(6)
+      .toList();
+  List<LetGoItem> gridItems = DataHelper.getActiveItems()
+      .skip(6)
+      .take(4)
+      .toList();
+  List<LetGoItem> horizontalItems2 = DataHelper.getFeaturedItems().reversed
+      .take(6)
+      .toList()
+      .reversed
+      .toList();
+  List<LetGoItem> gridItems2 = (DataHelper.getActiveItems()..shuffle())
+      .take(4)
+      .toList();
+  late PageController _pageController;
+  
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 1000);
+  }
+
   void onCartUpdated() {
     setState(() {});
+  }
+
+  // ItemDetailPage'e navigation için yeni fonksiyon
+  Future<void> navigateToItemDetail(LetGoItem item) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ItemDetailPage(urun: item),
+      ),
+    );
+    // Geri döndüğünde sepet ikonunu güncelle
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -261,7 +301,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   //Ana Kategori ListView - F
                   //Pageview - S
-                  //Şimdilik Placeholder kullan.
+                  //Şimdilik Placeholder kullanacağım
                   Container(
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(44, 44, 44, 1),
@@ -270,15 +310,17 @@ class _MainPageState extends State<MainPage> {
                     child: Stack(
                       children: [
                         PageView.builder(
+                          controller: _pageController,
                           scrollDirection: Axis.horizontal,
                           pageSnapping: true,
-                          itemCount: bannerPath.length,
+                          //itemCount: bannerPath.length,
                           onPageChanged: (index) {
                             setState(() {
-                              _currentPage = index;
+                              _currentPage = index % bannerPath.length;
                             });
                           },
                           itemBuilder: (context, index) {
+                            final realIndex = index % bannerPath.length;
                             return Container(
                               margin: EdgeInsets.symmetric(
                                 horizontal: 15.w,
@@ -287,7 +329,7 @@ class _MainPageState extends State<MainPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 image: DecorationImage(
-                                  image: AssetImage(bannerPath[index]),
+                                  image: AssetImage(bannerPath[realIndex]),
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -321,12 +363,12 @@ class _MainPageState extends State<MainPage> {
                   //Pageview - F
                   //Item Kart Tasarım Listview - S
                   Container(
+                    alignment: Alignment.bottomCenter,
                     padding: EdgeInsets.only(left: 14.w),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(64, 64, 64, 1),
                     ),
                     height: 420.h,
-                    alignment: Alignment.center,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -366,17 +408,18 @@ class _MainPageState extends State<MainPage> {
                         ),
                         SizedBox(height: 10.h),
                         SizedBox(
-                          height: 375.h,
+                          height: 355.h,
                           child: ListView.builder(
                             itemExtent: 200,
-                            itemCount: testItems.length,
+                            itemCount: horizontalItems.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(right: 10),
                                 child: UrunKartTasarim(
-                                  testItem: testItems[index],
+                                  testItem: horizontalItems[index],
                                   onCartUpdated: onCartUpdated,
+                                  onItemTap: navigateToItemDetail, // Eklendi
                                 ),
                               );
                             },
@@ -404,7 +447,6 @@ class _MainPageState extends State<MainPage> {
                       ),
                     ),
                   ),
-
                   //Ücretsiz Kargo Banner - F
                   // GridView - S
                   Padding(
@@ -419,16 +461,111 @@ class _MainPageState extends State<MainPage> {
                             crossAxisSpacing: 10.w,
                             mainAxisSpacing: 15.h,
                           ),
-                      itemCount: testItems.length,
+                      itemCount: gridItems.length,
                       itemBuilder: (context, index) {
                         return UrunKartTasarim(
-                          testItem: testItems[index],
+                          testItem: gridItems[index],
                           onCartUpdated: onCartUpdated,
+                          onItemTap: navigateToItemDetail, // Eklendi
                         );
                       },
                     ),
                   ),
                   //GridView - F
+
+                  //2.Listview - S
+                  Container(
+                    padding: EdgeInsets.only(left: 14.w),
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(64, 64, 64, 1),
+                    ),
+                    height: 420.h,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.h),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Öne Çıkan Ürünler",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.h),
+                        SizedBox(
+                          height: 375.h,
+                          child: ListView.builder(
+                            itemExtent: 200,
+                            itemCount: horizontalItems2.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: UrunKartTasarim(
+                                  testItem: horizontalItems2[index],
+                                  onCartUpdated: onCartUpdated,
+                                  onItemTap: navigateToItemDetail, // Eklendi
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //2.Listview - F
+                  //Reklam - S
+                  //Reklam - S
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 250,
+                          width: 325,
+                          child: Image.asset(
+                            DataHelper.reklam1,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //Reklam - F
+                  // GridView2 - S
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.6,
+                            crossAxisSpacing: 10.w,
+                            mainAxisSpacing: 15.h,
+                          ),
+                      itemCount: gridItems2.length,
+                      itemBuilder: (context, index) {
+                        return UrunKartTasarim(
+                          testItem: gridItems2[index],
+                          onCartUpdated: onCartUpdated,
+                          onItemTap: navigateToItemDetail, // Eklendi
+                        );
+                      },
+                    ),
+                  ),
+
+                  //GridView2 - F
                 ],
               ),
             ),

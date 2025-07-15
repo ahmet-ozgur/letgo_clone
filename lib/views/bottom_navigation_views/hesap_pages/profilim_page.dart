@@ -29,6 +29,9 @@ class ProfilimPage extends StatelessWidget {
                     CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 15,
+                      backgroundImage: AssetImage(
+                        "assets/images/mypp.jpg",
+                      ),
                     ),
                     SizedBox(width: 8),
                     Text(
@@ -118,8 +121,13 @@ class ProfilimPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           CircleAvatar(
-                            radius: 7,
-                            backgroundColor: Colors.white,
+                            radius: 12,
+                            backgroundColor: Color.fromRGBO(44, 44, 44, 1),
+                            child: Icon(
+                              Icons.timer_rounded,
+                              color: Colors.white,
+                              size: 12,
+                            ),
                           ),
                           SizedBox(width: 10),
                           Column(
@@ -176,23 +184,35 @@ class ProfilimPage extends StatelessWidget {
                             children: [
                               SizedBox(width: 3),
                               CircleAvatar(
-                                radius: 7,
+                                radius: 11,
                                 backgroundColor: Colors.white,
+                                backgroundImage: AssetImage(
+                                  "assets/images/faceicon.png",
+                                ),
                               ),
                               SizedBox(width: 15),
                               CircleAvatar(
-                                radius: 7,
+                                radius: 11,
                                 backgroundColor: Colors.white,
+                                backgroundImage: AssetImage(
+                                  "assets/images/googleicon.png",
+                                ),
                               ),
                               SizedBox(width: 15),
                               CircleAvatar(
-                                radius: 7,
+                                radius: 11,
                                 backgroundColor: Colors.white,
+                                backgroundImage: AssetImage(
+                                  "assets/images/phoneicon.png",
+                                ),
                               ),
                               SizedBox(width: 15),
                               CircleAvatar(
-                                radius: 7,
+                                radius: 11,
                                 backgroundColor: Colors.white,
+                                backgroundImage: AssetImage(
+                                  "assets/images/mailicon.png",
+                                ),
                               ),
                             ],
                           ),
