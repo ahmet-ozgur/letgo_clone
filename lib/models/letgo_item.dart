@@ -40,7 +40,7 @@ class LetGoItem {
     this.hasFreeShipping = false,
   });
 
-  //Bunu sonradan düzenle, resim zaten koymadan ilan açtırmıyor.
+  //Bunu sonradan düzenlemem lazım resim zaten koymadan ilan açtırmıyor.
   String get mainImage {
     return imagePaths.isNotEmpty
         ? imagePaths.first

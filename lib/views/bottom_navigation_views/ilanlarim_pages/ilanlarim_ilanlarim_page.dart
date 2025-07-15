@@ -78,7 +78,7 @@ class _IlanlarimIlanlarimPageState extends State<IlanlarimIlanlarimPage> {
                 OneCikarReklami(),
                 //Öne Çıkar Container - F
                 //Test Ürün Kart
-                EtkinIlanKart(aktifUrunler: aktifUrunler, index: 1),
+                EtkinIlanKart(aktifUrunler: aktifUrunler, index: 10),
                 SatildiIlanKart(satilanUrunler: satilanUrunler, index: 0),
                 RedIlanKart(redUrunler: redUrunler, index: 0),
               ],
@@ -576,15 +576,17 @@ class EtkinIlanKart extends StatelessWidget {
                       //title + forward iconu - S
                       Row(
                         children: [
-                          Text(
-                            aktifUrunler[index].title,
-                            style: TextStyle(
-                              color: Color.fromRGBO(209, 209, 209, 1),
-                              fontSize: 10.5,
+                          Expanded(
+                            child: Text(
+                              aktifUrunler[index].title,
+                              style: TextStyle(
+                                color: Color.fromRGBO(209, 209, 209, 1),
+                                fontSize: 10.5,
+                              ),
+                              softWrap: true,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            softWrap: true,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           Spacer(),
                           IconButton(

@@ -104,7 +104,7 @@ class TeklifUrunKart extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadiusGeometry.circular(8),
                         child: Image.asset(
-                          DataHelper.allItems[5].mainImage,
+                          urun.mainImage,
                           fit: BoxFit.fill,
                         ),
                       ),
