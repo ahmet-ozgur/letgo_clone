@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:letgo_clone/views/main_bottom_navigation.dart';
 import 'dart:async';
 
@@ -22,9 +21,9 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
         backgroundColor: Colors.grey.shade900,
         automaticallyImplyLeading: false,
         //Leading Icon - S
-        leadingWidth: 40.w,
+        leadingWidth: 40,
         leading: Padding(
-          padding: EdgeInsets.only(left: 12.0.w),
+          padding: EdgeInsets.only(left: 12.0),
           child: InkWell(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -34,7 +33,11 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
                 shape: BoxShape.circle,
                 color: Colors.grey.shade800,
               ),
-              child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+              child: Icon(
+                Icons.close,
+                color: Colors.white,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -44,7 +47,7 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
         title: Text(
           "Tekrar hoş geldin",
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -55,7 +58,10 @@ class _LoginPageVerificationState extends State<LoginPageVerification> {
         //Alt Çizgi - S
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
-          child: Container(color: Colors.black26, height: 1.h),
+          child: Container(
+            color: Colors.black26,
+            height: 1,
+          ),
         ),
         //Alt Çizgi - F
       ),
@@ -173,13 +179,14 @@ class _VerificationFormState extends State<VerificationForm> {
   }
   //Kod Kontrol Fonksiyonu - F
 
-  //Kod Doğrulama Fonksiyonu - S
+  // Kod Doğrulama Fonksiyonu - S
   void kodDogrulama() {
     if (kodTamMi) {
       if (kodDogruMu) {
-        //Doğru kod Ana sayfaya git
-        Navigator.of(context).pushReplacement(
+        //Doğru kod Ana sayfaya git - Tüm önceki sayfaları temizle
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => MainBottomNavigation()),
+          (Route<dynamic> route) => false,
         );
       } else {
         //Yanlış kod Hata göster
@@ -201,8 +208,8 @@ class _VerificationFormState extends State<VerificationForm> {
       }
     }
   }
-  //Kod Doğrulama Fonksiyonu - F
 
+  // Kod Doğrulama Fonksiyonu - F
   //Yeni Kod İste Fonksiyonu - S
   void yeniKodIste() {
     timerBaslat();
@@ -249,11 +256,11 @@ class _VerificationFormState extends State<VerificationForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 15.h),
+        SizedBox(height: 15),
 
         //Üst Bilgi Metni - S
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -262,14 +269,14 @@ class _VerificationFormState extends State<VerificationForm> {
                   text: TextSpan(
                     text: "Şuraya 4 haneli bir kod gönderdik. ",
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 14,
                       color: Color.fromRGBO(160, 160, 160, 1),
                     ),
                     children: [
                       TextSpan(
                         text: widget.phoneNumber,
                         style: TextStyle(
-                          fontSize: 14.sp,
+                          fontSize: 14,
                           color: Color.fromRGBO(160, 160, 160, 1),
                           fontWeight: FontWeight.bold,
                         ),
@@ -283,11 +290,11 @@ class _VerificationFormState extends State<VerificationForm> {
         ),
 
         //Üst Bilgi Metni - F
-        SizedBox(height: 20.h),
+        SizedBox(height: 20),
 
         //Numara Değiştir Linki - S
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -299,14 +306,14 @@ class _VerificationFormState extends State<VerificationForm> {
                   children: [
                     Icon(
                       Icons.edit,
-                      size: 22.sp,
+                      size: 22,
                       color: Color.fromRGBO(255, 61, 81, 1),
                     ),
-                    SizedBox(width: 5.w),
+                    SizedBox(width: 5),
                     Text(
                       "Numara değiştir",
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 14,
                         color: Color.fromRGBO(255, 61, 81, 1),
                         fontWeight: FontWeight.bold,
                       ),
@@ -319,18 +326,18 @@ class _VerificationFormState extends State<VerificationForm> {
         ),
 
         //Numara Değiştir Linki - F
-        SizedBox(height: 30.h),
+        SizedBox(height: 30),
 
         //Kod Giriş Alanları - S
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               //1. Alan - S
               Container(
-                width: 60.w,
-                height: 60.h,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: tf1.text.isNotEmpty
@@ -338,7 +345,7 @@ class _VerificationFormState extends State<VerificationForm> {
                         : Colors.white54,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: tf1,
@@ -348,7 +355,7 @@ class _VerificationFormState extends State<VerificationForm> {
                   maxLength: 1,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24.sp,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
@@ -366,8 +373,8 @@ class _VerificationFormState extends State<VerificationForm> {
 
               //2. Alan - S
               Container(
-                width: 60.w,
-                height: 60.h,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: tf2.text.isNotEmpty
@@ -375,7 +382,7 @@ class _VerificationFormState extends State<VerificationForm> {
                         : Colors.white54,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: tf2,
@@ -385,7 +392,7 @@ class _VerificationFormState extends State<VerificationForm> {
                   maxLength: 1,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24.sp,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
@@ -403,8 +410,8 @@ class _VerificationFormState extends State<VerificationForm> {
 
               //3. Alan - S
               Container(
-                width: 60.w,
-                height: 60.h,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: tf3.text.isNotEmpty
@@ -412,7 +419,7 @@ class _VerificationFormState extends State<VerificationForm> {
                         : Colors.white54,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: tf3,
@@ -422,7 +429,7 @@ class _VerificationFormState extends State<VerificationForm> {
                   maxLength: 1,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24.sp,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
@@ -440,8 +447,8 @@ class _VerificationFormState extends State<VerificationForm> {
 
               //4. Alan - S
               Container(
-                width: 60.w,
-                height: 60.h,
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: tf4.text.isNotEmpty
@@ -449,7 +456,7 @@ class _VerificationFormState extends State<VerificationForm> {
                         : Colors.white54,
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: TextField(
                   controller: tf4,
@@ -459,7 +466,7 @@ class _VerificationFormState extends State<VerificationForm> {
                   maxLength: 1,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24.sp,
+                    fontSize: 24,
                     fontWeight: FontWeight.bold,
                   ),
                   decoration: InputDecoration(
@@ -479,14 +486,14 @@ class _VerificationFormState extends State<VerificationForm> {
         ),
 
         //Kod Giriş Alanları - F
-        SizedBox(height: 30.h),
+        SizedBox(height: 30),
 
         //Timer Yazısı - S
         if (!yeniKodIsteButton)
           Text(
             "${zamanFormat(kalanSaniye)} içinde tekrar dene",
             style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 14,
               color: Color.fromRGBO(160, 160, 160, 1),
             ),
           ),
@@ -510,16 +517,16 @@ class _VerificationFormState extends State<VerificationForm> {
               ),
             ],
           ),
-          width: double.infinity.w,
-          height: 66.h,
+          width: double.infinity,
+          height: 66,
           child: Padding(
             padding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 20.w,
+              vertical: 15,
+              horizontal: 20,
             ),
             child: SizedBox(
-              width: double.infinity.w,
-              height: 36.h,
+              width: double.infinity,
+              height: 36,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: yeniKodIsteButton

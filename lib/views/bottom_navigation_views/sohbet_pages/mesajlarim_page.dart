@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
@@ -201,7 +200,7 @@ class SohbetKartTasarim extends StatelessWidget {
                       //Rating -F
                       //Title -S
                       Text(
-                        "${activeItem.title}",
+                        activeItem.title,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10.5,

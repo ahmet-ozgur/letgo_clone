@@ -18,6 +18,7 @@ class _IlanlarimPageState extends State<IlanlarimPage> {
         backgroundColor: Color.fromRGBO(35, 35, 35, 1),
         //AppBar - S
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Color.fromRGBO(35, 35, 35, 1),
 
           //Title - S

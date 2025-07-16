@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:letgo_clone/views/login_pages/login_page_verification.dart'; // Bu import'u ekleyin
 
 class LoginPagePhoneNumber extends StatefulWidget {
@@ -19,9 +18,9 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade900,
         //Leading Icon - S
-        leadingWidth: 40.w,
+        leadingWidth: 40,
         leading: Padding(
-          padding: EdgeInsets.only(left: 12.0.w),
+          padding: EdgeInsets.only(left: 12.0),
           child: InkWell(
             onTap: () => Navigator.pop(context),
             child: Container(
@@ -31,7 +30,7 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
                 shape: BoxShape.circle,
                 color: Colors.grey.shade800,
               ),
-              child: Icon(Icons.close, color: Colors.white, size: 20.sp),
+              child: Icon(Icons.close, color: Colors.white, size: 20),
             ),
           ),
         ),
@@ -41,7 +40,7 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
         title: Text(
           "Telefon numaranı gir",
           style: TextStyle(
-            fontSize: 18.sp,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -52,7 +51,7 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
         //Alt Çizgi -S
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1),
-          child: Container(color: Colors.black26, height: 1.h),
+          child: Container(color: Colors.black26, height: 1),
         ),
 
         //Alt Çizgi - F
@@ -60,18 +59,18 @@ class _LoginPagePhoneNumberState extends State<LoginPagePhoneNumber> {
       body: Center(
         child: Column(
           children: [
-            SizedBox(height: 15.h),
+            SizedBox(height: 15),
             //Text Bilgi - S
             Text(
               "Senin için bu numaraya bir doğrulama kodu göndereceğiz.",
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 12,
                 color: Color.fromRGBO(160, 160, 160, 1),
               ),
             ),
 
             //Text Bilgi - F
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
 
             //Telefon No Alanı - S
             PhoneForm(),
@@ -138,15 +137,15 @@ class _PhoneFormState extends State<PhoneForm> {
           children: [
             //TextFormField - S
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              padding: EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
-                width: double.infinity.w,
-                height: 57.h,
+                width: double.infinity,
+                height: 57,
                 child: TextFormField(
                   textAlignVertical: TextAlignVertical(y: 1),
                   textAlign: TextAlign.left,
                   keyboardType: TextInputType.number,
-                  // ✅ TextEditingController yerine onSaved + onChanged
+                  // TextEditingController yerine onSaved + onChanged
                   onSaved: (value) {
                     _phoneNumber = value ?? '';
                   },
@@ -154,12 +153,12 @@ class _PhoneFormState extends State<PhoneForm> {
                     _updateState(value);
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  style: TextStyle(color: Colors.white, fontSize: 14.sp),
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                   decoration: InputDecoration(
                     //Prefix Kısmı - S
                     prefixIcon: Padding(
                       padding: EdgeInsets.only(
-                        left: 10.w,
+                        left: 10,
                         right: 0,
                         top: 0,
                         bottom: 0,
@@ -175,31 +174,31 @@ class _PhoneFormState extends State<PhoneForm> {
                               color: _hasError
                                   ? Colors.red
                                   : Colors.white70,
-                              fontSize: 12.sp,
+                              fontSize: 12,
                             ),
                           ),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SizedBox(
-                                width: 25.w,
-                                height: 20.h,
+                                width: 25,
+                                height: 20,
                                 child: Image.asset(
                                   "assets/images/turkey_flag.png",
                                   fit: BoxFit.contain,
                                 ),
                               ),
-                              SizedBox(width: 3.w),
+                              SizedBox(width: 3),
                               Text(
                                 "+90",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 14.sp,
+                                  fontSize: 14,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 2.h),
+                          SizedBox(height: 2),
                         ],
                       ),
                     ),
@@ -269,16 +268,16 @@ class _PhoneFormState extends State<PhoneForm> {
                   ),
                 ],
               ),
-              width: double.infinity.w,
-              height: 66.h,
+              width: double.infinity,
+              height: 66,
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: 15.h,
-                  horizontal: 20.w,
+                  vertical: 15,
+                  horizontal: 20,
                 ),
                 child: SizedBox(
-                  width: double.infinity.w,
-                  height: 36.h,
+                  width: double.infinity,
+                  height: 36,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _hasText
@@ -295,7 +294,7 @@ class _PhoneFormState extends State<PhoneForm> {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => LoginPageVerification(
-                              phoneNumber: "+90 ${_phoneNumber}",
+                              phoneNumber: "+90 $_phoneNumber",
                             ),
                           ),
                         );

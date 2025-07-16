@@ -974,7 +974,7 @@ class DataHelper {
   //Utility Fonksiyonları - F
 
   //Sepet Yönetimi - S
-  static Map<String, int> _cart = {};
+  static final Map<String, int> _cart = {};
 
   static bool addToCart(LetGoItem item) {
     if (_cart.containsKey(item.id)) {
@@ -1042,7 +1042,7 @@ class DataHelper {
   //Sepet Yönetimi - F
 
   //Favori Yönetimi - S
-  static Set<String> _favoriteItems = {};
+  static final Set<String> _favoriteItems = {};
 
   static bool toggleFavorite(LetGoItem item) {
     if (_favoriteItems.contains(item.id)) {

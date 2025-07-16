@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
 import 'package:letgo_clone/models/main_category.dart';
@@ -77,7 +76,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 child: IconButton(
                   icon: Icon(
                     Icons.shopping_cart,
-                    size: 22.sp,
+                    size: 22,
                     color: Colors.white,
                   ),
                   onPressed: () async {
@@ -107,7 +106,7 @@ class _CategoryPageState extends State<CategoryPage> {
                       '${DataHelper.getCartItemCount()}',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 10.sp,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,
@@ -116,9 +115,9 @@ class _CategoryPageState extends State<CategoryPage> {
                 ),
             ],
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: 12),
         ],
-        actionsPadding: EdgeInsets.only(right: 12.w),
+        actionsPadding: EdgeInsets.only(right: 12),
         //Actions - F
         //Alt çizgi
         bottom: PreferredSize(
@@ -135,7 +134,7 @@ class _CategoryPageState extends State<CategoryPage> {
       body: categoryItems.isEmpty
           ? _buildEmptyCategory()
           : Padding(
-              padding: EdgeInsets.all(15.w),
+              padding: EdgeInsets.all(15),
               child: Column(
                 children: [
                   //Kategori Info - S
@@ -189,7 +188,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     ),
                   ),
                   //Kategori Info - F
-                  SizedBox(height: 15.h),
+                  SizedBox(height: 15),
                   //GridView - S
                   Expanded(
                     child: GridView.builder(
@@ -198,8 +197,8 @@ class _CategoryPageState extends State<CategoryPage> {
                           SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             childAspectRatio: 0.6,
-                            crossAxisSpacing: 10.w,
-                            mainAxisSpacing: 15.h,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 15,
                           ),
                       itemCount: categoryItems.length,
                       itemBuilder: (context, index) {
@@ -222,7 +221,7 @@ class _CategoryPageState extends State<CategoryPage> {
   Widget _buildEmptyCategory() {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(20.w),
+        padding: EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -235,29 +234,29 @@ class _CategoryPageState extends State<CategoryPage> {
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
             Text(
               "Bu kategoride henüz ürün yok",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18.sp,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 10),
             Text(
               "${widget.category.name} kategorisinde\nhenüz aktif ürün bulunmuyor",
-              style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+              style: TextStyle(color: Colors.grey, fontSize: 14),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 20),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromRGBO(255, 63, 86, 1),
                 padding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 12.h,
+                  horizontal: 20,
+                  vertical: 12,
                 ),
               ),
               onPressed: () {
@@ -268,7 +267,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                 ),
               ),
             ),

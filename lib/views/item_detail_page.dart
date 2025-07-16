@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
 import 'package:letgo_clone/views/cart_page.dart';
@@ -174,33 +173,46 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                 Positioned(
                   top: 20,
                   left: 15,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(254, 218, 46, 1),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.flash_on,
-                          color: Colors.black,
-                          size: 14,
+                  child: Visibility(
+                    visible: widget.urun.isFeatured,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState: true,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(
+                          254,
+                          218,
+                          46,
+                          1,
                         ),
-                        SizedBox(width: 4),
-                        Text(
-                          "Öne Çıkan",
-                          style: TextStyle(
+                        borderRadius: BorderRadius.circular(
+                          20,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.flash_on,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 11,
+                            size: 14,
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 4),
+                          Text(
+                            "Öne Çıkan",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -253,70 +265,98 @@ class _ItemDetailPageState extends State<ItemDetailPage> {
                   child: Row(
                     children: [
                       // Cüzdanım Güvende - S
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.verified_user,
-                                color: Colors.green,
-                                size: 16,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                "Cüzdanım Güvende",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                      Visibility(
+                        visible: widget.urun.isWalletSafe,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black
+                                  .withValues(alpha: 0.7),
+                              borderRadius:
+                                  BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              mainAxisSize:
+                                  MainAxisSize.min,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.verified_user,
+                                  color: Colors.green,
+                                  size: 16,
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 4),
+                                Text(
+                                  "Cüzdanım Güvende",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                        FontWeight.w500,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       // Cüzdanım Güvende - F
-                      SizedBox(width: 20),
+                      Spacer(),
                       // Ücretsiz Kargo - S
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withValues(alpha: 0.7),
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.local_shipping,
-                                color: Color.fromRGBO(21, 104, 232, 1),
-                                size: 16,
-                              ),
-                              SizedBox(width: 4),
-                              Text(
-                                "Ücretsiz Kargo",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                      Visibility(
+                        visible:
+                            widget.urun.hasFreeShipping,
+                        maintainSize: true,
+                        maintainAnimation: true,
+                        maintainState: true,
+                        child: Expanded(
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black
+                                  .withValues(alpha: 0.7),
+                              borderRadius:
+                                  BorderRadius.circular(15),
+                            ),
+                            child: Row(
+                              mainAxisSize:
+                                  MainAxisSize.min,
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.local_shipping,
+                                  color: Color.fromRGBO(
+                                    21,
+                                    104,
+                                    232,
+                                    1,
+                                  ),
+                                  size: 16,
                                 ),
-                              ),
-                            ],
+                                SizedBox(width: 4),
+                                Text(
+                                  "Ücretsiz Kargo",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight:
+                                        FontWeight.w500,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -892,7 +932,7 @@ class ItemDetailBottomBarWidget extends StatelessWidget {
 
           // Teklif yap buton
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -933,7 +973,7 @@ class ItemDetailBottomBarWidget extends StatelessWidget {
 
           // Hemen al buton - Sepete ekle özelliği ekledim
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: 50,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -1244,7 +1284,7 @@ class QASectionWidget extends StatelessWidget {
       child: Column(
         children: [
           // Sorular listesi
-          Container(
+          SizedBox(
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

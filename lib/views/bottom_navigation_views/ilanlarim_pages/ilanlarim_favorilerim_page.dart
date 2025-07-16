@@ -22,7 +22,7 @@ class _IlanlarimFavorilerimPageState
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(34, 34, 34, 1),
-      body: favoriteItems.length == 0
+      body: favoriteItems.isEmpty
           ? FavoriYok()
           : ListView.builder(
               scrollDirection: Axis.vertical,
@@ -101,7 +101,7 @@ class FavoriUrunKart extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    "${favoriUrun.title}",
+                    favoriUrun.title,
                     style: TextStyle(
                       color: Color.fromRGBO(182, 182, 182, 1),
                       fontSize: 12,

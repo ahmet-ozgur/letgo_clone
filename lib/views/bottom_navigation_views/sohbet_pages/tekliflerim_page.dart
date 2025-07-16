@@ -86,7 +86,7 @@ class TeklifUrunKart extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "${urun.title}",
+                        urun.title,
                         style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.bold,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
-import 'package:letgo_clone/views/cart_page.dart';
 import 'package:letgo_clone/views/item_detail_page.dart';
 
 class UrunKartTasarim extends StatefulWidget {
@@ -9,11 +8,11 @@ class UrunKartTasarim extends StatefulWidget {
     super.key,
     required this.testItem,
     this.onCartUpdated,
-    this.onItemTap, // Yeni eklenen callback
+    this.onItemTap,
   });
   final LetGoItem testItem;
   final VoidCallback? onCartUpdated;
-  final Function(LetGoItem)? onItemTap; // Yeni eklenen callback
+  final Function(LetGoItem)? onItemTap;
 
   @override
   State<UrunKartTasarim> createState() => _UrunKartTasarimState();
@@ -178,7 +177,7 @@ class _UrunKartTasarimState extends State<UrunKartTasarim> {
                                         ? Colors.white
                                         : Colors.transparent,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 7,
+                                    fontSize: 6,
                                   ),
                                 ),
                               ],
@@ -225,7 +224,7 @@ class _UrunKartTasarimState extends State<UrunKartTasarim> {
                                         ? Colors.white
                                         : Colors.transparent,
                                     fontWeight: FontWeight.w500,
-                                    fontSize: 7,
+                                    fontSize: 6,
                                   ),
                                 ),
                               ],
@@ -274,14 +273,14 @@ class _UrunKartTasarimState extends State<UrunKartTasarim> {
                     ),
                   ),
                   //Fiyat - F
-                  //Açıklama - S
+                  //Title - S
                   Text(
-                    widget.testItem.description,
+                    widget.testItem.title,
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
-                  //Açıklama - F
+                  //Title - F
                   Spacer(),
                   //Sepete Ekle Butonu - S
                   SizedBox(

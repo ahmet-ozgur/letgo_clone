@@ -200,7 +200,7 @@ class _CartPageState extends State<CartPage> {
                   //Orta Tutar Bilgisi - F
                   Spacer(),
                   //Sağ Ödeme Butonu - S
-                  Container(
+                  SizedBox(
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(

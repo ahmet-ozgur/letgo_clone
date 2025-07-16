@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:letgo_clone/helper/data_helper.dart';
 import 'package:letgo_clone/models/letgo_item.dart';
-import 'package:letgo_clone/views/bottom_navigation_views/main_page.dart';
 import 'package:letgo_clone/widgets/urun_kart_widget.dart';
 
 class GridPageViewWidget extends StatefulWidget {
@@ -40,7 +37,7 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: widget.height,
       child: Column(
         children: [
@@ -60,7 +57,7 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
                 int secondItemIndex = firstItemIndex + 1;
 
                 return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     children: [
                       //Sol ürün
@@ -70,7 +67,7 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
                         ),
                       ),
 
-                      SizedBox(width: 10.w),
+                      SizedBox(width: 10),
 
                       //Sağ ürün
                       Expanded(
@@ -87,7 +84,7 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
             ),
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: 10),
 
           //Alt boncuklar
           Row(
@@ -95,9 +92,9 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
             children: List.generate(
               totalPages,
               (index) => Container(
-                margin: EdgeInsets.symmetric(horizontal: 4.w),
-                width: _currentPage == index ? 10.w : 7.w,
-                height: _currentPage == index ? 10.w : 7.h,
+                margin: EdgeInsets.symmetric(horizontal: 4),
+                width: _currentPage == index ? 10 : 7,
+                height: _currentPage == index ? 10 : 7,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _currentPage == index
@@ -108,7 +105,7 @@ class _GridPageViewWidgetState extends State<GridPageViewWidget> {
             ),
           ),
 
-          SizedBox(height: 10.h),
+          SizedBox(height: 10),
         ],
       ),
     );

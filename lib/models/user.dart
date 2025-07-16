@@ -3,7 +3,7 @@ class User {
   final String name;
   final String profileImagePath;
   final DateTime memberSince;
-  final double rating; // 0 - 5 arasında
+  final double rating;
   final int followerCount;
   final int followingCount;
   final String bio;
@@ -29,9 +29,9 @@ class User {
     final months = (difference.inDays % 365) ~/ 30;
     
     if (years > 0) {
-      return "${years} yıl";
+      return "$years yıl";
     } else if (months > 0) {
-      return "${months} ay";
+      return "$months ay";
     } else {
       return "${difference.inDays} gün";
     }
